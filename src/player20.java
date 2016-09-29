@@ -14,6 +14,7 @@ public class player20 implements ContestSubmission{
 	static Random rand = new Random();
 	static NumberFormat formatter  = new DecimalFormat("+#0.0;-#0.0");
 	static NumberFormat formatter2 = new DecimalFormat("+#0.0000;-#0.0000");
+	static NumberFormat formatter3 = new DecimalFormat("#00000");
 	static int max_evals;
 	static int evals = 0;
 	static boolean isMultimodal;
@@ -22,18 +23,18 @@ public class player20 implements ContestSubmission{
     
     Combinator combinator = new CombineRandomWeightedCrossover();
     Selector   selector   = new SelectTopN();
-    Mutator    mutator    = new MutateAddGaussian(0.5);
+    Mutator    mutator    = new MutateAddGaussian(0.1);
     
     //// settings
     static int initial   = 100; // initial population
-    static int recombine = 25; // # of individuals to recombine
+    static int recombine = 10; // # of individuals to recombine
 	
     // This method is called when you press Run in Eclipse
 	// It creates an instance of player20, gives it a
 	// ContestEvaluation object and calls testrun()
 	public static void main(String[] args) {	
 		player20 sub = new player20();
-		sub.setEvaluation(new FletcherPowellEvaluation());
+		sub.setEvaluation(new SphereEvaluation());
 		sub.run();		
 	}
 
@@ -59,11 +60,13 @@ public class player20 implements ContestSubmission{
 		// Run the algorithm while we are allowed to
 		while(evals < max_evals){
 			System.out.println();
-			System.out.println("Recombining the best " + recombine +"...");
+			System.out.println("Evals: " + formatter3.format(evals) 
+					+ ". Recombining the best " + recombine +"...");
 			for(int i = 0; i < recombine; i++){
 				for(int j = 0; j < recombine; j++){		
 					if(evals < max_evals){
-						Tuple combination = combinator.combine(tuples.get(i), tuples.get(j));	
+						Tuple combination = combinator.combine(
+								tuples.get(i), tuples.get(j));	
 						mutator.mutate(combination);
 						combination.evaluate(eval);
 						evals++;
