@@ -26,15 +26,15 @@ public class player20 implements ContestSubmission{
     Mutator    mutator    = new MutateAddGaussian(0.1);
     
     //// settings
-    static int initial   = 100; // initial population
-    static int recombine = 10; // # of individuals to recombine
+    static int initial; // initial population
+    static int recombine; // # of individuals to recombine
 	
     // This method is called when you press Run in Eclipse
 	// It creates an instance of player20, gives it a
 	// ContestEvaluation object and calls testrun()
 	public static void main(String[] args) {	
 		player20 sub = new player20();
-		sub.setEvaluation(new SphereEvaluation());
+		sub.setEvaluation(new RastriginEvaluation());
 		sub.run();		
 	}
 
@@ -94,6 +94,10 @@ public class player20 implements ContestSubmission{
 		Properties props = evaluation.getProperties();
         
         max_evals = Integer.parseInt(props.getProperty("Evaluations"));
+        
+        initial = Math.round((float)0.01*max_evals);
+        recombine = Math.round((float)0.001*max_evals);
+        
 		// Property keys depend on specific evaluation
 		// E.g. double param = Double.parseDouble(props.getProperty("property_name"));
         boolean isMultimodal = Boolean.parseBoolean(props.getProperty("Multimodal"));

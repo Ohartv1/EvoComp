@@ -10,7 +10,7 @@ import org.vu.contest.ContestEvaluation;
 public class FletcherPowellEvaluation implements ContestEvaluation 
 {
 	// Evaluations budget
-	private final static int EVALS_LIMIT_ = 1000000;
+	private final static int EVALS_LIMIT_ = 100000;
 	// The base performance. It is derived by doing  random search on the F&P function (see function method) with the same
 	//  amount of evaluations
 	private final static double BASE_ = 15796.33;
