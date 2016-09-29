@@ -21,11 +21,12 @@ public class player20 implements ContestSubmission{
     static boolean isSeparable;
     
     Combinator combinator = new CombinationMethod1();
+    Selector   selector   = new SelectTopN();
+    Mutator    mutator    = new MutateAddGaussian(0.1);
     
     //// settings
     static int initial   = 100; // initial population
     static int recombine = 25; // # of individuals to recombine
-    static double mutation_amount = 0.01;
 	
     // This method is called when you press Run in Eclipse
 	// It creates an instance of player20, gives it a

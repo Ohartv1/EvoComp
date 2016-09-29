@@ -46,12 +46,13 @@ public class Tuple implements Comparable<Tuple>{
 		return -1;
 	}
 	
-	// add a random amount from (-amount , amount) to every element in vector
-	public void mutate(double amount){
-		for(int i = 0; i < vector.length; i++){
-			vector[i] += amount*(2*rand.nextDouble() - 1);
-		}
-	}
+	// REMOVE because we now use the Mutator classes instead
+//	// add a random amount from (-amount , amount) to every element in vector
+//	public void mutate(double amount){
+//		for(int i = 0; i < vector.length; i++){
+//			vector[i] += amount*(2*rand.nextDouble() - 1);
+//		}
+//	}
 	
 		
 	// Fill the vector with random numbers from (-5, 5)
