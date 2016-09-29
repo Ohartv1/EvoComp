@@ -20,9 +20,9 @@ public class player20 implements ContestSubmission{
     static boolean hasStructure;
     static boolean isSeparable;
     
-    Combinator combinator = new CombinationMethod1();
+    Combinator combinator = new CombineRandomWeightedCrossover();
     Selector   selector   = new SelectTopN();
-    Mutator    mutator    = new MutateAddGaussian(0.1);
+    Mutator    mutator    = new MutateAddGaussian(0.5);
     
     //// settings
     static int initial   = 100; // initial population
@@ -33,7 +33,7 @@ public class player20 implements ContestSubmission{
 	// ContestEvaluation object and calls testrun()
 	public static void main(String[] args) {	
 		player20 sub = new player20();
-		sub.setEvaluation(new SphereEvaluation());
+		sub.setEvaluation(new FletcherPowellEvaluation());
 		sub.run();		
 	}
 
@@ -44,8 +44,10 @@ public class player20 implements ContestSubmission{
 		// Initialize the population
 		ArrayList<Tuple> tuples = new ArrayList<Tuple>();
 		for(int i = 0; i < initial; i++){
-			tuples.add(new Tuple());
-			eval.evaluate(tuples.get(i).vector);			
+			Tuple t = new Tuple();
+			t.evaluate(eval);			
+			evals++;
+			tuples.add(t);
 		}
 		Collections.sort(tuples, Collections.reverseOrder());
 		System.out.println(initial + " vectors initialized.");
@@ -59,12 +61,14 @@ public class player20 implements ContestSubmission{
 			System.out.println();
 			System.out.println("Recombining the best " + recombine +"...");
 			for(int i = 0; i < recombine; i++){
-				for(int j = 0; j < recombine; j++){
-					
-					Tuple combination = combinator.combine(tuples.get(i), tuples.get(j));				
-					combination.mutate(0.05);
-					eval.evaluate(combination.vector);
-					tuples.add(combination) ;
+				for(int j = 0; j < recombine; j++){		
+					if(evals < max_evals){
+						Tuple combination = combinator.combine(tuples.get(i), tuples.get(j));	
+						mutator.mutate(combination);
+						combination.evaluate(eval);
+						evals++;
+						tuples.add(combination) ;
+					}
 				}
 			}
 			

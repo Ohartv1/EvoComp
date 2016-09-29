@@ -2,6 +2,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Random;
 
+import org.vu.contest.ContestEvaluation;
+
 // Tuple class
 // This nested class represents an individual
 // Every individual has a genotype (vector) and 
@@ -44,6 +46,19 @@ public class Tuple implements Comparable<Tuple>{
 			return 1;
 		}
 		return -1;
+	}
+	
+//	public void setFitness(Double f){
+//		if(f != null){
+//			this.fitness = f;
+//		}
+//	}
+	
+	public void evaluate(ContestEvaluation eval){
+		Object temp = eval.evaluate(vector);
+		if(temp != null){
+			fitness = (double) temp;
+		}
 	}
 	
 	// REMOVE because we now use the Mutator classes instead

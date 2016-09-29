@@ -19,6 +19,4 @@ public class CombineUniformCrossover implements Combinator {
 		return new Tuple(v);
 	}
 	
-	
-	
 }
