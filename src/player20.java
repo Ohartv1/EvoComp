@@ -20,6 +20,7 @@ public class player20 implements ContestSubmission{
 	static boolean isMultimodal;
     static boolean hasStructure;
     static boolean isSeparable;
+    ArrayList<Tuple> tuples;
     
     Combinator combinator = new CombineRandomWeightedCrossover();
     Selector   selector   = new SelectTopN();
@@ -43,7 +44,7 @@ public class player20 implements ContestSubmission{
 	public void run() {
 		
 		// Initialize the population
-		ArrayList<Tuple> tuples = new ArrayList<Tuple>();
+		tuples = new ArrayList<Tuple>();
 		for(int i = 0; i < initial; i++){
 			Tuple t = new Tuple();
 			t.evaluate(eval);			
@@ -120,6 +121,37 @@ public class player20 implements ContestSubmission{
 	public void setSeed(long seed) {
 		rand.setSeed(seed);		
 	}
-		
+	
+	// Evaluate a Tuple. This is also where we keep track of our
+	// progress and diversity.
+	public void Evaluate(Tuple t){
+		if(evals < max_evals){
+			eval.evaluate(t);
+			int percentage = 100*Math.round(evals/max_evals);
+			if(percentage % 5 == 0){
+				double[] sds = gen_sd();
+				System.out.println(percentage + "of evals used, standard deviations:");
+				System.out.println( sds.toString() );
+				System.out.println("Average standard deviation: " + Statistics.getMean(sds));				
+			}
+			
+			
+			
+			
+			
+		}
+	}
+	
+	public double[] gen_sd(){
+		double[] sds = new double[10];
+		for(int i = 0; i < 10; i++){
+			double[] temp = new double[tuples.size()];
+			for(int j = 0; j < tuples.size(); j++){
+				temp[j] = tuples.get(j).vector[i];
+			}
+			sds[i] = Statistics.getStdDev(temp);
+		}
+		return sds;
+	}
 		
 }

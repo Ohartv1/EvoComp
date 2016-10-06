@@ -18,7 +18,7 @@ public class SphereEvaluation implements ContestEvaluation
 	private final static double BASE_ = 11.5356;
 	// The minimum of the sphere function
 	private final static double ftarget_=0;
-	
+
 	// Best fitness so far
 	private double best_;
 	// Evaluations used so far
