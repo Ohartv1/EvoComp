@@ -19,6 +19,5 @@ public class MutateAddGaussian implements Mutator {
 		return new Tuple(newvector);
 	}
 	
-	
 
 }

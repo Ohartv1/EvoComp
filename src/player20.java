@@ -35,7 +35,7 @@ public class player20 implements ContestSubmission{
 	// ContestEvaluation object and calls testrun()
 	public static void main(String[] args) {	
 		player20 sub = new player20();
-		sub.setEvaluation(new RastriginEvaluation());
+		sub.setEvaluation(new SphereEvaluation());
 		sub.run();		
 	}
 
@@ -47,8 +47,7 @@ public class player20 implements ContestSubmission{
 		tuples = new ArrayList<Tuple>();
 		for(int i = 0; i < initial; i++){
 			Tuple t = new Tuple();
-			t.evaluate(eval);			
-			evals++;
+			Evaluate(t);	
 			tuples.add(t);
 		}
 		Collections.sort(tuples, Collections.reverseOrder());
@@ -69,8 +68,7 @@ public class player20 implements ContestSubmission{
 						Tuple combination = combinator.combine(
 								tuples.get(i), tuples.get(j));	
 						mutator.mutate(combination);
-						combination.evaluate(eval);
-						evals++;
+						Evaluate(combination);
 						tuples.add(combination) ;
 					}
 				}
@@ -126,13 +124,16 @@ public class player20 implements ContestSubmission{
 	// progress and diversity.
 	public void Evaluate(Tuple t){
 		if(evals < max_evals){
-			eval.evaluate(t);
+			t.evaluate(eval);
+			evals++;
 			int percentage = 100*Math.round(evals/max_evals);
 			if(percentage % 5 == 0){
 				double[] sds = gen_sd();
-				System.out.println(percentage + "of evals used, standard deviations:");
+				String percentagestring = Integer.toString(percentage);
+				System.out.println(percentagestring + "of evals used, standard deviations:");
 				System.out.println( sds.toString() );
-				System.out.println("Average standard deviation: " + Statistics.getMean(sds));				
+				System.out.println("Average standard deviation: " + 
+									Double.toString(Statistics.getMean(sds)));				
 			}
 			
 			
