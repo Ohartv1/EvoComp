@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Statistics 
 {
@@ -8,6 +10,18 @@ public class Statistics
         for(double a : data)
             sum += a;
         return sum/data.length;
+    }
+    
+    static double getMean(ArrayList<Double> data){
+    	Double sum = 0.0;
+    	for(Double d : data){
+    		sum += d;
+    	}
+    	return sum / data.size();
+    }
+    
+    static double getMean(List<Double> data){
+    	return getMean(new ArrayList<Double>(data));
     }
 
     static double getVariance(double[] data)

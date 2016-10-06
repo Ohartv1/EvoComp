@@ -25,11 +25,15 @@ public class player20 implements ContestSubmission{
     static boolean isSeparable;
     ArrayList<Tuple> tuples;
     ArrayList<Double> progress = new ArrayList<Double>();
+    ArrayList<Double> speed    = new ArrayList<Double>();
     
     
-    Combinator combinator = new CombineAverage();
+    Combinator combinator = new CombineRandomWeightedCrossover();
     Selector   selector   = new SelectTopN();
     Mutator    mutator    = new MutateAddGaussian(0.1);
+    
+    //temporary, feel free to remove if necessary
+    int count = 0;
     
     //// settings
     static int initial; // initial population
@@ -80,29 +84,20 @@ public class player20 implements ContestSubmission{
 			}
 			
 			Collections.sort(tuples, Collections.reverseOrder());
-			System.out.println("Top 10:");
-			for(int i = 0; i < 10; i++){
-				System.out.println(tuples.get(i).toString());
-			}
+//			System.out.println("Top 10:");
+//			for(int i = 0; i < 10; i++){
+//				System.out.println(tuples.get(i).toString());
+//			}
 		}
+	
+		writeToFile(progress,"progress.txt");	
+		writeToFile(speed,"speed.txt");
 		
-		
-
-
-		
-		try{
-			FileWriter writer = new FileWriter("progress.txt"); 
-			for(Double d : progress){
-				writer.write(Double.toString(d) );
-				writer.write("\n");
-			}	
-			writer.close();
-		} 
-		catch(IOException e){
-			System.out.println(e.getMessage());
+		try {
+			Runtime.getRuntime().exec("python3 plot_progress.py");
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-
-		
 	}
 
 	// This method is called by the test system of the VU
@@ -116,8 +111,8 @@ public class player20 implements ContestSubmission{
         
         max_evals = Integer.parseInt(props.getProperty("Evaluations"));
         
-        initial = Math.round((float)0.01*max_evals);
-        recombine = Math.round((float)0.005*max_evals);
+        initial = Math.round((float)0.1*max_evals);
+        recombine = Math.round((float)0.002*max_evals);
         
 		// Property keys depend on specific evaluation
 		// E.g. double param = Double.parseDouble(props.getProperty("property_name"));
@@ -148,6 +143,25 @@ public class player20 implements ContestSubmission{
 			t.evaluate(eval);
 			evals++;
 			progress.add(t.fitness);
+			
+			if(evals > 2000){
+				double current_avg_progress = Statistics.getMean(
+						progress.subList(progress.size()-100, progress.size()));
+				double previous_avg_progress = Statistics.getMean(
+						progress.subList( progress.size() - 600, progress.size() - 500));
+				speed.add(current_avg_progress - previous_avg_progress);
+				// we only want the first ten
+				
+				if(speed.get(speed.size()-1) < 1 && count < 10){
+					
+					System.out.println("Speed = " + Double.toString(speed.get(speed.size()-1)) +
+							" , evals: " + Integer.toString(evals));
+					count++;
+				}				
+			}
+			
+			
+			
 			double percentage = 100* (evals / max_evals);
 			if(evals % 500 == 0){
 				double[] sds = gen_sd();
@@ -161,6 +175,8 @@ public class player20 implements ContestSubmission{
 		}
 	}
 	
+	
+	
 	public double[] gen_sd(){
 		double[] sds = new double[10];
 		for(int i = 0; i < 10; i++){
@@ -171,6 +187,21 @@ public class player20 implements ContestSubmission{
 			sds[i] = Statistics.getStdDev(temp);
 		}
 		return sds;
+	}
+	
+
+	public void writeToFile(ArrayList<Double> list, String filename){
+		try{
+			FileWriter writer = new FileWriter(filename); 
+			for(Double d : list){
+				writer.write(Double.toString(d));
+				writer.write("\n");
+			}	
+			writer.close();
+		} 
+		catch(IOException e){
+			System.out.println(e.getMessage());
+		}
 	}
 		
 }
