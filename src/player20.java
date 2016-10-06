@@ -1,11 +1,14 @@
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Properties;
 import java.util.Random;
 import org.vu.contest.ContestEvaluation;
 import org.vu.contest.ContestSubmission;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class player20 implements ContestSubmission{
 
@@ -21,8 +24,10 @@ public class player20 implements ContestSubmission{
     static boolean hasStructure;
     static boolean isSeparable;
     ArrayList<Tuple> tuples;
+    ArrayList<Double> progress = new ArrayList<Double>();
     
-    Combinator combinator = new CombineRandomWeightedCrossover();
+    
+    Combinator combinator = new CombineAverage();
     Selector   selector   = new SelectTopN();
     Mutator    mutator    = new MutateAddGaussian(0.1);
     
@@ -81,6 +86,23 @@ public class player20 implements ContestSubmission{
 			}
 		}
 		
+		
+
+
+		
+		try{
+			FileWriter writer = new FileWriter("progress.txt"); 
+			for(Double d : progress){
+				writer.write(Double.toString(d) );
+				writer.write("\n");
+			}	
+			writer.close();
+		} 
+		catch(IOException e){
+			System.out.println(e.getMessage());
+		}
+
+		
 	}
 
 	// This method is called by the test system of the VU
@@ -95,7 +117,7 @@ public class player20 implements ContestSubmission{
         max_evals = Integer.parseInt(props.getProperty("Evaluations"));
         
         initial = Math.round((float)0.01*max_evals);
-        recombine = Math.round((float)0.001*max_evals);
+        recombine = Math.round((float)0.005*max_evals);
         
 		// Property keys depend on specific evaluation
 		// E.g. double param = Double.parseDouble(props.getProperty("property_name"));
@@ -108,8 +130,7 @@ public class player20 implements ContestSubmission{
             // Do sth
         }else{
             // Do sth else
-        }
-		
+        }		
 	}
 
 	// We use a random number generator in our code a few times
@@ -126,20 +147,17 @@ public class player20 implements ContestSubmission{
 		if(evals < max_evals){
 			t.evaluate(eval);
 			evals++;
-			int percentage = 100*Math.round(evals/max_evals);
-			if(percentage % 5 == 0){
+			progress.add(t.fitness);
+			double percentage = 100* (evals / max_evals);
+			if(evals % 500 == 0){
 				double[] sds = gen_sd();
-				String percentagestring = Integer.toString(percentage);
-				System.out.println(percentagestring + "of evals used, standard deviations:");
-				System.out.println( sds.toString() );
-				System.out.println("Average standard deviation: " + 
-									Double.toString(Statistics.getMean(sds)));				
-			}
-			
-			
-			
-			
-			
+//				String percentagestring = Integer.toString((int)Math.round(percentage));
+//				System.out.println(percentagestring + "% of evals used, standard deviations:");
+//				System.out.println( Arrays.toString(sds));
+//				System.out.println("Average standard deviation: " + 
+//									Double.toString(Statistics.getMean(sds)));	
+//				System.out.println();
+			}			
 		}
 	}
 	
