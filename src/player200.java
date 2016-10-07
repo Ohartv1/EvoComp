@@ -50,11 +50,11 @@ public class player200 implements ContestSubmission{
 		// Initialize the population
 		tuples = new ArrayList<Tuple>();
 		
-		for(int i = 0; i < initial; i++){
-			Tuple t = new Tuple();
-			Evaluate(t)			
-			tuples.add(t);
-		}
+//		for(int i = 0; i < initial; i++){
+//			Tuple t = new Tuple();
+//			Evaluate(t)			
+//			tuples.add(t);
+//		}
 				
 		// Needed selection
 		ArrayList<Tuple> parentSelection = new ArrayList<Tuple>();
@@ -72,8 +72,8 @@ public class player200 implements ContestSubmission{
 			// mutate the offspring
 			sadChildren.addAll(lmutator.mutatelist(happyChildren, mutator));
 			// check fitness
-			for(Tuple t : sadChildren){
-				Evaluate(t);
+//			for(Tuple t : sadChildren){
+//				Evaluate(t);
 			}
 			// select survivors
 			survivorSelection.addAll(selector.select(happyChildren, initial));
@@ -86,7 +86,6 @@ public class player200 implements ContestSubmission{
 			
 
 		}	
-	}
 
 	// This method is called by the test system of the VU
 	// We will receive a ContestEvaluation object through this
