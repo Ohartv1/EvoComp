@@ -18,6 +18,10 @@ public class MutateAddGaussian implements Mutator {
 		}
 		return new Tuple(newvector);
 	}
+
+	public void scale(double s) {
+		this.scale *= s;		
+	}
 	
 
 }
