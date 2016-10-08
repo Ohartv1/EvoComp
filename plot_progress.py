@@ -63,5 +63,3 @@ plt.subplot(2,2,4)
 plt.subplots_adjust(left = 0.02, right = 0.98, bottom = 0.03, top = 0.97, wspace = 0.04, hspace = 0.08)
 
 plt.show()
-
-print(maximum)
