@@ -25,7 +25,7 @@ public class player200 implements ContestSubmission{
     Combinator combinator = new CombineRandomWeightedCrossover();
     Selector   selector   = new SelectTopN();
     Mutator    mutator    = new MutateAddGaussian(0.1);
-    ListCombinator lcombinator = new locationCombinator();
+    ListCombinator lcombinator = new locationCombine();
     ListMutator lmutator = new mutateList();
     
     //// settings
@@ -36,7 +36,7 @@ public class player200 implements ContestSubmission{
 	// It creates an instance of player20, gives it a
 	// ContestEvaluation object and calls testrun()
 	public static void main(String[] args) {	
-		player20 sub = new player20();
+		player200 sub = new player200();
 		sub.setEvaluation(new RastriginEvaluation());
 		sub.run();		
 	}

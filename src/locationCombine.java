@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class locationCombinator implements ListCombinator{
+public class locationCombine implements ListCombinator{
 	
 	public ArrayList<Tuple> combinelist(ArrayList<Tuple> l, Combinator combinator) {
 		

@@ -11,7 +11,7 @@ import org.vu.contest.ContestSubmission;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class player20 implements ContestSubmission{
+public class player20_backup implements ContestSubmission{
 
 	// declaration of variables
 	static ContestEvaluation eval;
@@ -51,7 +51,7 @@ public class player20 implements ContestSubmission{
 	// ContestEvaluation object and calls testrun()
 	public static void main(String[] args) {	
 		testing = true;
-		player20 sub = new player20();
+		player20_backup sub = new player20_backup();
 		sub.setEvaluation(new RastriginEvaluation());
 		sub.run();		
 	}
@@ -82,8 +82,7 @@ public class player20 implements ContestSubmission{
 			for(int i = 0; i < recombine; i++){
 				for(int j = 0; j < i; j++){	
 					if(i != j && evals < max_evals){
-						Tuple combination = combinator.combine(
-								tuples.get(i), tuples.get(j));	
+						Tuple combination = combinator.combine(tuples.get(i), tuples.get(j));	
 						mutator.mutate(combination);
 						Evaluate(combination);
 						tuples.add(combination) ;						
@@ -112,7 +111,7 @@ public class player20 implements ContestSubmission{
 			writeToFile(maximum,  "maximum.txt"  );
 
 			try {
-				Runtime.getRuntime().exec("python3 plot_progress.py");
+				Runtime.getRuntime().exec("python plot_progress.py");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

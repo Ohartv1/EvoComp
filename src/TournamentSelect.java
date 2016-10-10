@@ -11,12 +11,12 @@ import java.util.Collections;
  */
 
 
-public class TournamentSelect {
+public class TournamentSelect implements Selector {
 	
 	public ArrayList<Tuple> select(ArrayList<Tuple> selectfrom, int n){
 		
 		// Setting;
-		int k = 5;
+		int k = 50;
 		
 		int RandIndex;
 		double mu = selectfrom.size();
@@ -26,7 +26,7 @@ public class TournamentSelect {
 		
 		while(count < n){
 			for (int i = 0; i < k; i++){
-				RandIndex = (int) Math.floor(Math.random() * (mu + 1));
+				RandIndex = (int) Math.floor(Math.random() * (mu));
 				SelectionPool.add(selectfrom.get(RandIndex));
 			}
 			Collections.sort(SelectionPool, Collections.reverseOrder());
