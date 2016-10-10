@@ -11,7 +11,7 @@ import org.vu.contest.ContestSubmission;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class player20 implements ContestSubmission{
+public class player201 implements ContestSubmission{
 
 	// declaration of variables
 	static ContestEvaluation eval;
@@ -25,11 +25,14 @@ public class player20 implements ContestSubmission{
     static boolean hasStructure;
     static boolean isSeparable;
     ArrayList<Tuple>  tuples;
-    static boolean testing = false;
+    static boolean testing = true;
      
     Combinator combinator = new CombineRandomWeightedCrossover();
-    Selector   selector   = new SelectTopN();
+    Selector   selector   = new TournamentSelect();
     Mutator    mutator    = new MutateAddGaussian(0.5);
+    ListCombinator lcombinator = new allCombine();
+    ListMutator lmutator = new mutateList();
+
     
     // needed for evaluation 
     int count = 0;
@@ -51,7 +54,7 @@ public class player20 implements ContestSubmission{
 	// ContestEvaluation object and calls testrun()
 	public static void main(String[] args) {	
 		testing = true;
-		player20 sub = new player20();
+		player201 sub = new player201();
 		sub.setEvaluation(new RastriginEvaluation());
 		sub.run();		
 	}
@@ -59,47 +62,67 @@ public class player20 implements ContestSubmission{
 	// Work in progress, a simple evolutionary algorithm
 	// is implemented, but it's probably not perfect.
 	public void run() {
+		ArrayList<Tuple> parentSelection = new ArrayList<Tuple>();
+		ArrayList<Tuple> survivorSelection = new ArrayList<Tuple>();
+		ArrayList<Tuple> happyChildren = new ArrayList<Tuple>();
+		ArrayList<Tuple> sadChildren = new ArrayList<Tuple>();
+		tuples = new ArrayList<Tuple>();
+		
+		int numberOfParents = 50;
+		int numberOfChildren = 100;
+		
 		
 		// Initialize the population
-		tuples = new ArrayList<Tuple>();
 		for(int i = 0; i < initial; i++){
 			Tuple t = new Tuple();
 			Evaluate(t);	
-			tuples.add(t);
+			survivorSelection.add(t);
 		}
-		Collections.sort(tuples, Collections.reverseOrder());
-		System.out.println(initial + " vectors initialized.");
-		System.out.println("Top 10:");
-		for(int i = 0; i < 10; i++){
-			System.out.println(tuples.get(i).toString());
-		}
-				
-		// Run the algorithm while we are allowed to
+
+		
+		System.out.println("Start");
+		System.out.println("initial population: " + initial);
+		System.out.println("number of parents: " + numberOfParents);
+		System.out.println("number of selected children: " + numberOfChildren);
+		
+		// Run the algorithm while we are allowed to		
 		while(evals < max_evals){
-			System.out.println();
-			System.out.println("Evals: " + formatter3.format(evals) 
-					+ ". Recombining the best " + recombine +"...");
-			for(int i = 0; i < recombine; i++){
-				for(int j = 0; j < i; j++){	
-					if(i != j && evals < max_evals){
-						Tuple combination = combinator.combine(
-								tuples.get(i), tuples.get(j));	
-						mutator.mutate(combination);
-						Evaluate(combination);
-						tuples.add(combination) ;						
-					}
-				}
+			
+			// select parents
+			parentSelection.addAll(selector.select(survivorSelection, numberOfParents));
+			sadChildren.clear();
+			survivorSelection.clear();	
+			
+			// have some children
+			happyChildren.addAll(lcombinator.combinelist(parentSelection, combinator));
+			parentSelection.clear();			
+			
+			// mutate the offspring
+			sadChildren.addAll(lmutator.mutatelist(happyChildren, mutator));
+			happyChildren.clear();			
+			
+			// check fitness
+			for(Tuple t : sadChildren){
+				Evaluate(t);
 			}
 			
-			Collections.sort(tuples, Collections.reverseOrder());
-			tuples = new ArrayList<Tuple>(tuples.
-					subList(0, tuples.size() - (int)Math.round(0.5*recombine*(recombine-1))));			
-			System.out.println("Population size: " + Double.toString(tuples.size()));
-			System.out.println("Top 3:");
-			for(int i = 0; i < 3; i++){
-				System.out.println(tuples.get(i).toString());
-			}
+			// select survivors
+			survivorSelection.addAll(selector.select(sadChildren, numberOfChildren));
+			
+			tuples.addAll(survivorSelection);
+			
 		}
+
+		System.out.println("number of combine population: " + sadChildren.size());
+		System.out.println("Evals: " + formatter3.format(evals));
+		System.out.println();
+		Collections.sort(tuples, Collections.reverseOrder());
+		System.out.println("Top 3:");
+		for(int i = 0; i < 3; i++){
+			System.out.println(tuples.get(i).toString());
+		}
+		
+		
 		
 		// if we're testing (i.e. running locally)
 		// generate result files and plot them with Python
@@ -112,13 +135,14 @@ public class player20 implements ContestSubmission{
 			writeToFile(maximum,  "maximum.txt"  );
 
 			try {
-				Runtime.getRuntime().exec("python3 plot_progress.py");
+				Runtime.getRuntime().exec("python plot_progress.py");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+		
 	}
-
+		
 	// This method is called by the test system of the VU
 	// We will receive a ContestEvaluation object through this
 	// method, that will gives us the opportunity to request
@@ -139,12 +163,33 @@ public class player20 implements ContestSubmission{
         boolean hasStructure = Boolean.parseBoolean(props.getProperty("Regular"));
         boolean isSeparable = Boolean.parseBoolean(props.getProperty("Separable"));
 
-		// Do sth with property values, e.g. specify relevant settings of your algorithm
+		// Relevant settings to adapt to different function properties.
         if(isMultimodal){
-            // Do sth
+            //
+            combinator = new CombineRandomWeightedCrossover();
+            selector   = new SelectTopN();
+            mutator    = new MutateAddGaussian(0.1);
+            
+            //ect.....
+        	
         }else{
-            // Do sth else
-        }		
+            //
+        	
+        }
+        
+        if(hasStructure){
+            //
+        	
+        }else{
+            //
+        }
+        
+        if(isSeparable){
+            // 
+
+        }else{
+            // 
+        }	
 	}
 
 	// We use a random number generator in our code a few times
