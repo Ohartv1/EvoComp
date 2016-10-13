@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 /**
@@ -26,6 +25,9 @@ public class RankSelect implements Selector {
 		double Chance;
 		ArrayList<Tuple> ReturnPopulation = new ArrayList<Tuple>();
 		int i = 0;
+		double x = (2 - s) / mu;
+		double y = 2.0 * (s - 1);
+		double z = mu * ( mu - 1);
 		
 		Collections.sort(selectfrom, Collections.reverseOrder());
 		
@@ -34,7 +36,7 @@ public class RankSelect implements Selector {
 				i = i % n;
 			}
 
-			Chance = (2 - s) / mu  + (2.0 * i * (s - 1)) / (mu * ( mu - 1));
+			Chance = x + (i * y) / z;
 			if (Math.random() <= Chance){
 				ReturnPopulation.add(selectfrom.get(i));
 			}
