@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 
 /**
@@ -26,12 +27,13 @@ public class RankSelect implements Selector {
 		ArrayList<Tuple> ReturnPopulation = new ArrayList<Tuple>();
 		int i = 0;
 		
-		Collections.sort(selectfrom);
+		Collections.sort(selectfrom, Collections.reverseOrder());
 		
-		while ( n < i ) {
-			if (n == i){
+		while (n > ReturnPopulation.size()) {
+			if(i == n){
 				i = i % n;
 			}
+
 			Chance = (2 - s) / mu  + (2.0 * i * (s - 1)) / (mu * ( mu - 1));
 			if (Math.random() <= Chance){
 				ReturnPopulation.add(selectfrom.get(i));
