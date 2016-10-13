@@ -28,7 +28,7 @@ public class player201 implements ContestSubmission{
     static boolean testing = true;
      
     Combinator combinator = new CombineRandomWeightedCrossover();
-    Selector   selector   = new TournamentSelect();
+    Selector   selector   = new RankSelect();
     Mutator    mutator    = new MutateAddGaussian(0.5);
     ListCombinator lcombinator = new allCombine();
     ListMutator lmutator = new mutateList();
