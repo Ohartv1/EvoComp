@@ -38,6 +38,7 @@ public class player201 implements ContestSubmission{
     int count = 0;
     int mutation_increased = 0;
     int added_individuals  = 0;
+    Double best = Double.NaN;
     ArrayList<Double> progress = new ArrayList<Double>();
     ArrayList<Double> speed    = new ArrayList<Double>();
     ArrayList<Double> mean_sd  = new ArrayList<Double>();
@@ -79,11 +80,16 @@ public class player201 implements ContestSubmission{
 			survivorSelection.add(t);
 		}
 
+<<<<<<< HEAD
 
 		System.out.println("Start");
+=======
+		
+>>>>>>> refs/remotes/origin/master
 		System.out.println("initial population: " + initial);
 		System.out.println("number of parents: " + numberOfParents);
 		System.out.println("number of selected children: " + numberOfChildren);
+		System.out.println("Starting... \n");
 		
 		// Run the algorithm while we are allowed to		
 		while(evals < max_evals){
@@ -117,8 +123,8 @@ public class player201 implements ContestSubmission{
 		System.out.println("Evals: " + formatter3.format(evals));
 		System.out.println();
 		Collections.sort(tuples, Collections.reverseOrder());
-		System.out.println("Top 3:");
-		for(int i = 0; i < 3; i++){
+		System.out.println("Done. \nTop 5:");
+		for(int i = 0; i < 5; i++){
 			System.out.println(tuples.get(i).toString());
 		}
 		
@@ -132,15 +138,14 @@ public class player201 implements ContestSubmission{
 			writeToFile(mean_sd,  "mean_sd.txt"  );
 			writeToFile(add_ind,  "add_ind.txt"  );
 			writeToFile(mut_inc,  "mut_inc.txt"  );
-			writeToFile(maximum,  "maximum.txt"  );
+			//writeToFile(maximum,  "maximum.txt"  );
 
 			try {
-				Runtime.getRuntime().exec("python plot_progress.py");
+				Runtime.getRuntime().exec("python3 plot_progress.py");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-		
+		}		
 	}
 		
 	// This method is called by the test system of the VU
@@ -154,7 +159,7 @@ public class player201 implements ContestSubmission{
         
         max_evals = Integer.parseInt(props.getProperty("Evaluations"));
         
-        initial = Math.round((float)0.1*max_evals);
+        initial   = Math.round((float)0.1*max_evals);
         recombine = Math.round((float)0.001*max_evals);
         
 		// Property keys depend on specific evaluation
@@ -173,8 +178,9 @@ public class player201 implements ContestSubmission{
             //ect.....
         	
         }else{
-            //
-        	
+        	selector = new SelectTopN();
+        	mutator  = new MutateAddGaussian(0.1);
+            //        	
         }
         
         if(hasStructure){
@@ -207,8 +213,10 @@ public class player201 implements ContestSubmission{
 			t.evaluate(eval);
 			evals++;
 			progress.add(t.fitness);
-
-			double best = best();
+			//update the current best score
+			if(t.fitness > best  || best.isNaN() ){
+				best = t.fitness;
+			}
 			maximum.add(best);
 			
 			if(evals > initial + recombine){
@@ -229,11 +237,12 @@ public class player201 implements ContestSubmission{
 				
 				// if were progressing too slowly				
 //				if(currentspeed < 1 && (count++ % 1000 == 0 )){
+//					//System.out.println(">>> Speed lower than 1, evals:" + evals);
 //					
 //					// if diversity is too small, add individuals (max. 1 time)
 //					if(curr_mean_sd < 0.1 && added_individuals < 1){
 //						added_individuals++;
-//						System.out.println("Standard deviation: " + formatter2.format(curr_mean_sd));
+//						System.out.println("Low diversity deviation: " + formatter2.format(curr_mean_sd));
 //						addIndividuals();
 //					}
 //					
@@ -246,6 +255,7 @@ public class player201 implements ContestSubmission{
 //					}
 //					// if our best is still pretty bad, add some individuals
 //					if(best < 7 && mutation_increased >= 5){
+//						System.out.println("Adding individuals, evals: " +evals);
 //						addIndividuals();
 //					}
 //					// if we used 50% of iterations and we're still not
@@ -260,7 +270,6 @@ public class player201 implements ContestSubmission{
 //					if(evals/max_evals > 5/10 && best > 9.3){
 //						scaleMutation(0.2);
 //					}
-//
 //				}	
 				
 			} else{

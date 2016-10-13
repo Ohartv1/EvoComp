@@ -78,13 +78,8 @@ public class player200 implements ContestSubmission{
 			// select survivors
 			survivorSelection.addAll(selector.select(happyChildren, initial));
 			// to count number of evaluations
-			evals++;
-			
-			
-			
+			evals++;			
 			System.out.println("hoi");
-			
-
 		}	
 
 	// This method is called by the test system of the VU
@@ -105,7 +100,7 @@ public class player200 implements ContestSubmission{
 		// E.g. double param = Double.parseDouble(props.getProperty("property_name"));
         boolean isMultimodal = Boolean.parseBoolean(props.getProperty("Multimodal"));
         boolean hasStructure = Boolean.parseBoolean(props.getProperty("Regular"));
-        boolean isSeparable = Boolean.parseBoolean(props.getProperty("Separable"));
+        boolean isSeparable  = Boolean.parseBoolean(props.getProperty("Separable"));
 
 		// Relevant settings to adapt to different function properties.
         if(isMultimodal){
@@ -117,7 +112,7 @@ public class player200 implements ContestSubmission{
             //ect.....
         	
         }else{
-            //
+            selector   = new RankSelect();
         	
         }
         

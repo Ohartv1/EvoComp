@@ -16,7 +16,7 @@ public class TournamentSelect implements Selector {
 	public ArrayList<Tuple> select(ArrayList<Tuple> selectfrom, int n){
 		
 		// Setting;
-		int k = 50;
+		int k = (int)Math.round(n/10);
 		
 		int RandIndex;
 		double mu = selectfrom.size();
@@ -26,7 +26,7 @@ public class TournamentSelect implements Selector {
 		
 		while(count < n){
 			for (int i = 0; i < k; i++){
-				RandIndex = (int) Math.floor(Math.random() * (mu));
+				RandIndex = (int) Math.floor(Math.random() * mu );
 				SelectionPool.add(selectfrom.get(RandIndex));
 			}
 			Collections.sort(SelectionPool, Collections.reverseOrder());
