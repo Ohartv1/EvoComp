@@ -18,27 +18,25 @@ public class RankSelect implements Selector {
 	
 	public ArrayList<Tuple> select(ArrayList<Tuple> selectfrom, int n){
 		
-		double mu = selectfrom.size();
+		// parameter s // see above
 		double s = 1.5;
-		int Chance = 0;
+		
+		double mu = selectfrom.size();
+		double Chance;
 		ArrayList<Tuple> ReturnPopulation = new ArrayList<Tuple>();
-		ArrayList<Integer> BigPopulationIndex = new ArrayList<Integer>();
-		int RandIndex;
+		int i = 0;
 		
 		Collections.sort(selectfrom);
 		
-		for (int i = 0; i < mu; i++) {
-			Chance = (int) Math.round(((2 - s) / mu  + (2 * i * (s - 1)) / (mu * ( mu - 1))) * mu);
-			for (int j = 0; j < Chance; j++){
-				BigPopulationIndex.add(i);
+		while ( n < i ) {
+			if (n == i){
+				i = i % n;
 			}
-		}
-		
-		int big = BigPopulationIndex.size();
-		
-		for (int l = 0; l < n; l++){
-			RandIndex = (int) Math.floor(Math.random() * (big + 1));
-			ReturnPopulation.add(selectfrom.get(BigPopulationIndex.get(RandIndex)));
+			Chance = (2 - s) / mu  + (2.0 * i * (s - 1)) / (mu * ( mu - 1));
+			if (Math.random() <= Chance){
+				ReturnPopulation.add(selectfrom.get(i));
+			}
+			i++;
 		}
 		
 		return ReturnPopulation;
