@@ -25,11 +25,11 @@ public class player201 implements ContestSubmission{
     static boolean hasStructure;
     static boolean isSeparable;
     ArrayList<Tuple>  tuples;
-    static boolean testing = true;
+    static boolean testing = false;
      
     Combinator combinator = new CombineRandomWeightedCrossover();
     Selector   selector   = new RankSelect();
-    Mutator    mutator    = new MutateAddGaussian(0.5);
+    Mutator    mutator    = new MutateAddGaussian(0.005);
     ListCombinator lcombinator = new allCombine();
     ListMutator lmutator = new mutateList();
 
@@ -55,7 +55,7 @@ public class player201 implements ContestSubmission{
 	public static void main(String[] args) {	
 		testing = true;
 		player201 sub = new player201();
-		sub.setEvaluation(new RastriginEvaluation());
+		sub.setEvaluation(new FletcherPowellEvaluation());
 		sub.run();		
 	}
 
@@ -79,7 +79,7 @@ public class player201 implements ContestSubmission{
 			survivorSelection.add(t);
 		}
 
-		
+
 		System.out.println("Start");
 		System.out.println("initial population: " + initial);
 		System.out.println("number of parents: " + numberOfParents);
@@ -168,7 +168,7 @@ public class player201 implements ContestSubmission{
             //
             combinator = new CombineRandomWeightedCrossover();
             selector   = new SelectTopN();
-            mutator    = new MutateAddGaussian(0.1);
+            mutator    = new MutateAddGaussian(0.01);
             
             //ect.....
         	
